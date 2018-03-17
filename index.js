@@ -44,7 +44,7 @@ Object.assign(UI, Express, {
 
 UI.Router.prototype = Object.assign({}, Express.Router, {
 	async open(path = '') {
-		if(!path.startWith('/')) path = '/' + path
+		if(!path.startsWith('/')) path = '/' + path
 
 		this.dispatch.toClient('S_OPEN_AWESOMIUM_WEB_URL', 1, {url: await getServer(this) + path})
 	}
