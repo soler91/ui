@@ -1,8 +1,7 @@
 'use strict'
 
-const HOST = '127.0.0.69'
-
-const Express = require('express')
+const Express = require('express'),
+	{host, port} = require('./config')
 
 let serverPort = 0,
 	activeRouter = null
@@ -22,16 +21,14 @@ async function getServer(router) {
 				console.error(err)
 				res.status(500).end()
 			})
-			.listen(0, HOST, () => { resolve(app.address().port) })
+			.listen(port, host, () => { resolve(app.address().port) })
 			.on('error', reject)
 		})
 
-	return `${HOST}:${serverPort}`
+	return `${host}:${serverPort}`
 }
 
-function UI(dispatch, options) {
-	return UI.Router(dispatch, options)
-}
+function UI(dispatch, options) { return UI.Router(dispatch, options) }
 
 Object.assign(UI, Express, {
 	Router(dispatch, options) {
@@ -43,7 +40,7 @@ Object.assign(UI, Express, {
 })
 
 UI.Router.prototype = Object.assign({}, Express.Router, {
-	async open(path = '') {
+	async open(path = '/') {
 		if(!path.startsWith('/')) path = '/' + path
 
 		this.dispatch.toClient('S_OPEN_AWESOMIUM_WEB_URL', 1, {url: await getServer(this) + path})
