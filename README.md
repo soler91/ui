@@ -39,5 +39,5 @@ module.exports = function TestUI(dispatch) {
 
 ## API
 The API is identical to [Express](https://expressjs.com/), with a few notable differences:
-* The constructor `UI(dispatch, options)` returns an instance of `UI.Router`.
-* `UI.Router` has a new function called `open(path)` which opens an ingame window pointing to the specified route.
+* The constructor `UI(dispatch[, options])` returns an instance of `UI.Router`.
+* `UI.Router` has a new function called `open([path])` which opens an ingame window pointing to the specified route.
