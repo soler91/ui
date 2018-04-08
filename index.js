@@ -3,34 +3,55 @@
 const Express = require('express'),
 	{host, port} = require('./config')
 
-let serverQ = null,
-	serverPort = 0,
-	activeRouter = null
+class LazyServer {
+	constructor(dispatch) {
+		this.dispatch = dispatch
+		this.q = null
+		this.app = null
+		this.port = 0
+		this.router = null
+	}
+
+	async get(router) {
+		this.router = router // Switch active router
+
+		if(!this.port) // Load or await
+			if(!this.q) {
+				this.app = await (this.q = new Promise((resolve, reject) => {
+					const app = Express()
+					.set('env', 'production')
+					.enable('case sensitive routing')
+					.disable('x-powered-by')
+					.use((req, res, next) => { this.router(req, res, next) })
+					.use((req, res) => { res.status(404).end() })
+					.use((err, req, res, next) => {
+						console.error(err)
+						res.status(500).end()
+					})
+					.listen(port, host, () => { resolve(app) })
+					.on('error', reject)
+				}))
+				this.port = this.app.address().port
+				this.q = null
+
+				// Clean up on exit
+				this.dispatch.base.connection.serverConnection.once('close', async () => { this.app.close() })
+			}
+			else await this.q
+
+		return `${host}:${this.port}`
+	}
+}
+
+const servers = new WeakMap()
 
 async function getServer(router) {
-	activeRouter = router
+	const base = router.dispatch.base
+	if(servers.has(base)) return servers.get(base).get(router)
 
-	if(!serverPort) // Lazy-load
-		if(!serverQ) {
-			serverPort = await (serverQ = new Promise((resolve, reject) => {
-				const app = Express()
-				.set('env', 'production')
-				.enable('case sensitive routing')
-				.disable('x-powered-by')
-				.use((req, res, next) => { activeRouter(req, res, next) })
-				.use((req, res) => { res.status(404).end() })
-				.use((err, req, res, next) => {
-					console.error(err)
-					res.status(500).end()
-				})
-				.listen(port, host, () => { resolve(app.address().port) })
-				.on('error', reject)
-			}))
-			serverQ = null
-		}
-		else await serverQ
-
-	return `${host}:${serverPort}`
+	const server = new LazyServer(router.dispatch)
+	servers.set(base, server)
+	return server.get(router)
 }
 
 function UI(dispatch, options) { return UI.Router(dispatch, options) }
