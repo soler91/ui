@@ -35,7 +35,7 @@ class LazyServer {
 				this.q = null
 
 				// Clean up on exit
-				this.dispatch.base.connection.serverConnection.once('close', async () => { this.app.close() })
+				this.dispatch.base.connection.serverConnection.once('close', () => { this.app.close() })
 			}
 			else await this.q
 
