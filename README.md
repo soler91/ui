@@ -11,7 +11,7 @@ module.exports = function TestUI(dispatch) {
     const ui = UI(dispatch),
         command = Command(dispatch)
 
-    ui.get(UI.static(__dirname + '/ui'))
+    ui.use(UI.static(__dirname + '/ui'))
 
     command.add('testui', () => { ui.open() })
 }
