@@ -1,6 +1,5 @@
 {
 	"name": "Awesomium UI",
 	"author": "Pinkie Pie",
-	"namespace": "ui",
-	"update": "github:tera-mods/ui"
+	"namespace": "ui"
 }
