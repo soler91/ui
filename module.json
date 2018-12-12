@@ -1,0 +1,10 @@
+{
+	"disableAutoUpdate": false,
+	"name": "ui",
+	"author": "Pinkie Pie / (forked by HakuryuuDom)",
+	"discription": "Ingame Awesomeium UI library.",
+	"options": {
+		"niceName": "UI"
+	},
+	"servers": ["https://raw.githubusercontent.com/HakuryuuDom/ui/master/"]
+}

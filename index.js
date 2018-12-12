@@ -35,7 +35,7 @@ class LazyServer {
 				this.q = null
 
 				// Clean up on exit
-				this.dispatch.base.connection.serverConnection.once('close', () => { this.app.close() })
+				this.dispatch.dispatch.connection.serverConnection.once('close', () => { this.app.close() })
 			}
 			else await this.q
 
@@ -46,7 +46,7 @@ class LazyServer {
 const servers = new WeakMap()
 
 async function getServer(router) {
-	const base = router.dispatch.base
+	const base = router.dispatch.dispatch
 	if(servers.has(base)) return servers.get(base).get(router)
 
 	const server = new LazyServer(router.dispatch)
