@@ -2,7 +2,7 @@
 	"disableAutoUpdate": false,
 	"name": "ui",
 	"author": "Pinkie Pie / (forked by HakuryuuDom)",
-	"description": "Ingame Awesomeium UI library.",
+	"description": "Ingame Awesomeium UI library. WARNING: May take some time to download, depending on your connection!",
 	"options": {
 		"niceName": "UI"
 	},
